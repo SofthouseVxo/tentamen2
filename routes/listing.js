@@ -1,12 +1,6 @@
 dotify = require('node-dotify')
 
 get = (req, res, next) => {
-  req.models.Listing.find().then((listings) => {
-      return res.send(listings);
-    }).catch((error) => next(error))
-}
-
-get = (req, res, next) => {
   let search = {}
   if(req.query.Location){
     search = {Location: req.query.Location}
@@ -28,16 +22,14 @@ post = (req, res, next) => {
     Author: req.body.Author,
     Price: req.body.Price,
     MonthlyFee: req.body.MonthlyFee,
-    TypeOf: req.body.TypeOf,
+    Type: req.body.Type,
     Coordinate: {
       Longitude: req.body.Coordinate.Longitude,
       Latitude: req.body.Coordinate.Latitude,
     }
-  }).then((Listing) => {
-    return res.status(201).send(listing)
-  }).catch((error) => {
-    next(error)
-  })
+  }).then((listings) => {
+    return res.status(201).send(listings)
+  }).catch((error) => next(error))
 }
 
 getById = (req, res, next) => {

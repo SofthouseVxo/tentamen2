@@ -21,7 +21,7 @@ MonthlyFee: {
     type: String,
     required: true
 },
-TypeOf: {
+Type: {
     type: String,
     required: true
 },

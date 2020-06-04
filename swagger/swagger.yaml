@@ -11,13 +11,21 @@ servers:
 paths:
   /listings:
     get:
-      summary: Lists all listings
+      summary: Listings By Location
       operationId: listListings
       tags:
       - listings
+      parameters:
+      - name: Location
+        in: query
+        description: filter by listings
+        required: false
+        schema:
+          type: string
+        allowReserved: true
       responses:
         '200':
-          description: Array of listings
+          description: Array of Listings
           content:
             application/json:    
               schema:
@@ -28,7 +36,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-                    post:
+    post:
           summary: create a listing item
           operationId: create listingi item
           tags:
@@ -53,12 +61,12 @@ paths:
                 application/json:
                   schema:
                     $ref: "#/components/schemas/Error"
-  /Listing/{ListingId}:
+  /listings/{ListingId}:
     get:
           summary: Info on specific Listing
           operationId: getListingyId
           parameters: 
-          - name: listingId
+          - name: ListingId
             in: path
             description: Listing ID
             required: true
@@ -84,7 +92,7 @@ paths:
           summary: Updating specific Listing item
           operationId: Update listing item
           parameters:
-          - name: ListingID
+          - name: ListingId
             in: path
             description: Listing ID
             required: true
@@ -99,14 +107,14 @@ paths:
             content:
               application/json:    
                 schema:
-                  $ref: "#/components/schemas/Listings"
+                  $ref: "#/components/schemas/Listing"
           responses:
             '201':
               description: Update one Listing item
               content:
                 application/json:    
                   schema:
-                    $ref: "#/components/schemas/ResponseListings"
+                    $ref: "#/components/schemas/ResponseListing"
             default:
               description: unexpected error
               content:
@@ -132,7 +140,7 @@ paths:
               content:
                 application/json:    
                   schema:
-                    $ref: "#/components/schemas/ResponseListings"
+                    $ref: "#/components/schemas/ResponseListing"
                     '204':
                       description: Cant find id
                       content:
@@ -157,18 +165,18 @@ components:
           Author:
             type: string
           Price:
-            type: integer
-          SellerEmail:
-            type: string
+            type: number
           MonthlyFee:
             type: string
           Type:
             type: string
           Coordinate:
-            Longitude:
-              type: integer
-            Latitude:
-              type: integer your listings here   
+            type: object
+            properties:
+              Longitude:
+                type: number
+              Latitude:
+                type: number  
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
