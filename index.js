@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors")
 const swaggerUi = require('swagger-ui-express');
-
+const morgan = require('morgan')
 const routes = require("./routes")
 const db = require("./models")
 
 const app = express();
+app.use(morgan('tiny'));
 app.use(cors());
 
 // environment variable PORT or 3000 if unset
@@ -18,9 +19,10 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use((error, req, res, next) => {
   if (res.headersSent) {
-    return next(err)
+    return next(error)
   }
-  res.status(error.statusCode || error.status || 500).send({error: error })
+  console.error(error)
+  res.status(error.statusCode || error.status || 500).send({ error: error })
 })
 
 app.use((req, res, next) => {
@@ -47,7 +49,7 @@ app.use('/', routes)
 
 
 // Start up the database, then the server and begin listen to requests
-if(process.env.NODE_ENV != "test") {
+if (process.env.NODE_ENV != "test") {
   db.connectDb().then(() => {
     const listener = app.listen(port, () => {
       console.info(`Server is listening on port ${listener.address().port}.`);
