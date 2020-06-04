@@ -10,7 +10,6 @@ Each listing should contain the following information: coordinate with latitude 
 {
     "Address": "Bollgatan 8",
     "Location": "Velinge",
-    "Author": "Mark Michaelis",
     "Price": 59.99,
     "MonthlyFee": "1999 SEK",
     "Type": "Villa",
