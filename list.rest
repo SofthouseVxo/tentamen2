@@ -1,0 +1,47 @@
+GET http://localhost:3000/listings
+
+###
+
+GET http://localhost:3000/listings/5ed8b35506d89d1a889488d0
+
+###
+
+GET http://localhost:3000/listings/?Location=Växjö
+
+###
+
+POST http://localhost:3000/listings/
+Content-Type: application/json
+
+    {
+      "Address": "Movägen 8",
+      "Location": "Vislanda",
+      "Price": "1 000 000",
+      "MonthlyFee": "7000 sek",
+      "Type": "Villa",
+      "Coordinate": {
+        "Longitude": "12",
+        "Latitude": "45"
+      }
+    }
+
+###
+
+
+DELETE http://localhost:3000/listings/5ed8b26b06d89d1a889488cf
+###
+
+PUT http://localhost:3000/listings/5ed8b35506d89d1a889488d0
+Content-Type: application/json
+
+{
+  "Address": "Movägen 8",
+  "Location": "Växjö",
+  "Price": "1 000 000",
+  "MonthlyFee": "7000 sek",
+  "Type": "Villa",
+  "Coordinate": {
+  "Longitude": "12",
+  "Latitude": "45"
+  }
+}

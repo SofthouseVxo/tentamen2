@@ -1,9 +1,7 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: HomeNet
-  description: |
-    listings of properties for sale
+  title: Listings API
   license:
     name: MIT
 servers:
@@ -11,17 +9,147 @@ servers:
 paths:
   /listings:
     get:
-      summary: Lists all listings
+      summary: Listings By Location
       operationId: listListings
       tags:
-      - listings
+      - Listings
+      parameters:
+      - name: Location
+        in: query
+        description: filter by listings
+        required: false
+        schema:
+          type: string
+        allowReserved: true
       responses:
         '200':
-          description: Array of listings
+          description: Array of Listings
           content:
             application/json:    
               schema:
                 $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a new Listing
+      operationId: createListing
+      tags:
+      - Listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '200':
+          description: The created listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /listings/{listingId}:
+    get:
+      summary: Get By Id
+      operationId: listById
+      tags:
+      - Listings
+      parameters:
+      - name: listingId
+        in: path
+        description: listing id
+        required: true
+        schema:
+          type: string
+          format: int64
+        allowReserved: true
+      responses:
+        '200':
+          description: Array of Listings
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Replace an listing by ID
+      operationId: putListing
+      tags:
+      - Listings
+      parameters:
+      - name: listingId
+        in: path
+        description: listing id
+        required: true
+        schema:
+          type: string
+          format: int64
+      requestBody:
+        description: the listing you replaced
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '200':
+          description: The replaced listing was created
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '201':
+          description: The replaced listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '204':
+          description: Nothing happened
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a listing by ID
+      operationId: deleteListing
+      tags:
+        - Listings
+      parameters:
+      - name: listingId
+        in: path
+        description: listing Id
+        required: true
+        schema:
+          type: string
+          format: int64
+      responses:
+        '201':
+          description: The deleted listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '204':
+          description: No change (nothing was deleted)
         default:
           description: unexpected error
           content:
@@ -33,14 +161,31 @@ components:
     Listing:
       type: object
       properties:
-# Add properties for your listings here   
+        Address:
+          type: string
+        Location:
+          type: string
+        Author:
+          type: string
+        Price:
+          type: integer
+        MonthlyFee:
+          type: integer
+        Type: 
+          type: string
+        Coordinate:
+          type: object
+          properties:
+            Longitude:
+              type: integer
+            Latitude:
+              type: integer
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
       - properties:
-          __v:
+          id:
             type: integer
-            format: uint32
           _id:
             type: string
             format: uuid
@@ -50,22 +195,11 @@ components:
         $ref: "#/components/schemas/ResponseListing"
     Error:
       required:
-        - error
+        - code
+        - message
       properties:
-        error:
-          type: object
-          properties:
-            expose:
-              type: boolean
-            statusCode:
-              type: integer
-              format: uint32
-            status:
-              type: integer
-              format: uint32
-            body:
-              title: body as escaped json
-              type: string
-            type:
-              title: fault desciption
-              type: string
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
