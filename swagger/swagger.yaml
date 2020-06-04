@@ -27,8 +27,136 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-components:
+                $ref: "#/components/schemas/Error"components:
+    post:
+       summary: create a property
+       opererationID: createProperty
+       tags:
+       -property
+       requestBody:
+         description: the property to  create
+         required: true
+         content:
+           application/json:
+              schema:
+                $ref: "#/components/schemas/Listing" 
+        responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema: 
+              $ref: "#components/schema/responseListings"     
+        default:
+        description: unexpected error
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Error"   
+ /listings/{listingId}:
+    get:
+          summary: Info on specific property
+          operationId: getPropertyById
+          parameters: 
+          - name: propertyId
+            in: path
+            description: Property ID
+            required: true
+            schema:
+              type: string
+              format: int64
+          tags:
+          - properties
+          responses:
+            '200':
+              description: Show one property
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseProperties"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"  
+      patch:
+          summary: Updating specific property
+          operationId: updateProperty
+          parameters:
+          - name: PropertyId
+            in: path
+            description: property ID
+            required: true
+            schema:
+              type: string
+              format: int64
+          tags:
+          - properties
+          requestBody:
+            description: the property to update
+            required: true
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/listings"
+          responses:
+            '201':
+              description: req.param upserted
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"
+            '200':
+              description: OK
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings" 
+            '204':
+              description: No content
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"              
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    delete:
+          summary: Delete specific property
+          operationId: deleteProperty
+          parameters:
+          - name: propertyId
+            in: path
+            description: Property ID
+            required: true
+            schema:
+              type: string
+              format: int64 
+          tags:
+          - properties
+          responses:
+            '200':
+              description: deleted
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"
+            '204':
+                description: Cant find id
+                content:
+                  application/json:    
+                    schema:
+                      $ref: "#/components/schemas/Error"                 
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
   schemas:
     Listing:
       type: object
