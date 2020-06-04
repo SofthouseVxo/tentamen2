@@ -37,122 +37,129 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     post:
-          summary: create a listing item
-          operationId: create listingi item
-          tags:
-          - listings
-          requestBody:
-            description: the book to create
-            required: true
-            content:
-              application/json:    
-                schema:
-                  $ref: "#/components/schemas/Listing"
-          responses:
-            '201':
-              description: OK
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListings"
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"
+      summary: create a listing item
+      operationId: create listingi item
+      tags:
+      - listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:    
+            schema:
+              $ref: "#/components/schemas/Listing"
+      responses:
+        '200':
+          description: Listing created
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /listings/{ListingId}:
     get:
-          summary: Info on specific Listing
-          operationId: getListingyId
-          parameters: 
-          - name: ListingId
-            in: path
-            description: Listing ID
-            required: true
+      summary: Info on specific Listing
+      operationId: getListingyId
+      parameters: 
+      - name: ListingId
+        in: path
+        description: Listing ID
+        required: true
+        schema:
+          type: string
+          format: int64
+      tags:
+      - listings
+      responses:
+        '200':
+          description: Show one Listing item
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Replace a listing by ID
+      operationId: putListing
+      tags:
+      - listings
+      parameters:
+      - name: ListingId
+        in: path
+        description: listing id
+        required: true
+        schema:
+          type: string
+          format: int64
+      requestBody:
+        description: the listing you replaced
+        required: true
+        content:
+          application/json:
             schema:
-              type: string
-              format: int64
-          tags:
-          - listings
-          responses:
-            '200':
-              description: Show one Listing item
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListings"
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"
-    patch:
-          summary: Updating specific Listing item
-          operationId: Update listing item
-          parameters:
-          - name: ListingId
-            in: path
-            description: Listing ID
-            required: true
-            schema:
-              type: string
-              format: int64
-          tags:
-          - listings
-          requestBody:
-            description: Create an Listing object
-            required: true
-            content:
-              application/json:    
-                schema:
-                  $ref: "#/components/schemas/Listing"
-          responses:
-            '201':
-              description: Update one Listing item
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListing"
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '200':
+          description: The replaced listing was created
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '201':
+          description: The replaced listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '204':
+          description: The replaced listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"   
+                
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
-          summary: Delete specific listitem
-          operationId: delete object
-          parameters:
-          - name: ListingId
-            in: path
-            description: listing ID
-            required: true
-            schema:
-              type: string
-              format: int64 
-          tags:
-          - listings
-          responses:
-            '200':
-              description: Delete one object listing item
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListing"
-                    '204':
-                      description: Cant find id
-                      content:
-                        application/json:    
-                          schema:
-                            $ref: "#/components/schemas/Error"          
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"
+      summary: Delete specific listitem
+      operationId: delete object
+      parameters:
+      - name: ListingId
+        in: path
+        description: listing ID
+        required: true
+        schema:
+          type: string
+          format: int64 
+      tags:
+      - listings
+      responses:
+        '200':
+          description: Delete one object listing item
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"     
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Listing:

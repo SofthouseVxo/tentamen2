@@ -75,31 +75,9 @@ afterEach( () => {
 // 	});
 
 // });
-// describe('listings.patch', ()  => {
+describe('listings.put', ()  => {
 
-// 	it('Should change an object', (done) => {
-
-// 		// Given (preconditions)
-// 		Mock
-// 		.expects('find')
-// 		.chain('exec')
-// 		.resolves([expected]);
-
-// 		// When (someting happens)
-// 		agent
-// 		.get('/listings')
-// 		.end((err,res) => {
-// 		// Then (something should happen)
-// 			expect(res.status).to.equal(200);
-// 			expect(res.body).to.eql([expected]);
-// 			done();
-// 		});
-// 	});
-
-// });
-describe('listings.post', ()  => {
-
-	it('Should return an new object in the array', (done) => {
+	it('Should change an object', (done) => {
 
 		// Given (preconditions)
 		Mock
@@ -119,3 +97,25 @@ describe('listings.post', ()  => {
 	});
 
 });
+// describe('listings.post', ()  => {
+
+// 	it('Should return an new object in the array', (done) => {
+
+// 		// Given (preconditions)
+// 		Mock
+// 		.expects('find')
+// 		.chain('exec')
+// 		.resolves([expected]);
+
+// 		// When (someting happens)
+// 		agent
+// 		.get('/listings')
+// 		.end((err,res) => {
+// 		// Then (something should happen)
+// 			expect(res.status).to.equal(200);
+// 			expect(res.body).to.eql([expected]);
+// 			done();
+// 		});
+// 	});
+
+// });
