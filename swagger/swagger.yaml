@@ -9,7 +9,8 @@ info:
 servers:
 - url: http://localhost:3000
 paths:
-  /listings:
+  /listings/{location}:
+    /listings/{Adress}:
     get:
       summary: Lists all listings
       operationId: listListings
@@ -28,6 +29,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"components:
+      
     post:
        summary: create a property
        opererationID: createProperty
@@ -99,26 +101,25 @@ paths:
             content:
               application/json:    
                 schema:
-                  $ref: "#/components/schemas/listings"
+                  $ref: "#/components/schemas/listing"
           responses:
             '201':
               description: req.param upserted
               content:
                 application/json:    
                   schema:
-                    $ref: "#/components/schemas/ResponseListings"
+                    $ref: "#/components/schemas/ResponseListing"
             '200':
               description: OK
               content:
                 application/json:    
                   schema:
-                    $ref: "#/components/schemas/ResponseListings" 
+                    $ref: "#/components/schemas/ResponseListing" 
             '204':
               description: No content
-              content:
                 application/json:    
                   schema:
-                    $ref: "#/components/schemas/ResponseListings"              
+                    $ref: "#/components/schemas/ResponseListing"              
             default:
               description: unexpected error
               content:
@@ -144,10 +145,9 @@ paths:
               content:
                 application/json:    
                   schema:
-                    $ref: "#/components/schemas/ResponseListings"
+                    $ref: "#/components/schemas/ResponseListing"
             '204':
                 description: Cant find id
-                content:
                   application/json:    
                     schema:
                       $ref: "#/components/schemas/Error"                 
@@ -180,7 +180,7 @@ paths:
               type: number
             Latitude:
               type: number
-# Add properties for your listings here   
+# Add properties for your listings here  V 
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
