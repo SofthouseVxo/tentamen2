@@ -1,60 +1,111 @@
 const express = require("express");
-const cors = require("cors")
-const swaggerUi = require('swagger-ui-express');
-
-const routes = require("./routes")
-const db = require("./models")
-
 const app = express();
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const PORT = 4000;
+const listingRoutes = express.Router();
+const createError = require("http-errors");
+
+let Listing = require("./listing.model");
+
 app.use(cors());
+app.use(bodyParser.json());
 
-// environment variable PORT or 3000 if unset
-const port = process.env.PORT || 3000;
+mongoose.connect("mongodb://127.0.0.1:27017/listings", {
+  useNewUrlParser: true,
+});
+const connection = mongoose.connection;
 
-// Add middleware for parsing the body to req.body
-// middlewares are executed in the order added, so add before routes
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+connection.once("open", function () {
+  console.log("MongoDB database connection established successfully");
+});
 
-app.use((error, req, res, next) => {
-  if (res.headersSent) {
-    return next(err)
-  }
-  res.status(error.statusCode || error.status || 500).send({error: error })
-})
-
-app.use((req, res, next) => {
-  req.models = db.models
-  next()
-})
-
-var options = {
-  explorer: true,
-  editor: true,
-  swaggerOptions: {
-    urls: [
-      {
-        url: '/swagger.yaml',
-        name: 'Spec1'
+//Get all Listings and find by Location
+listingRoutes.route("/").get(function (req, res) {
+  var name = req.query.name;
+  if (name) {
+    Listing.find({ Location: name }, function (err, listing) {
+      res.json(listing);
+    });
+  } else {
+    Listing.find(function (err, listings) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(listings);
+        console.log();
       }
-    ]
+    });
   }
-}
+});
 
-app.use('/', express.static(__dirname + '/swagger'));
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(null, options));
-app.use('/', routes)
-
-
-// Start up the database, then the server and begin listen to requests
-if(process.env.NODE_ENV != "test") {
-  db.connectDb().then(() => {
-    const listener = app.listen(port, () => {
-      console.info(`Server is listening on port ${listener.address().port}.`);
+//Create new Listing
+listingRoutes.route("/").post(function (req, res) {
+  let listing = new Listing(req.body);
+  listing
+    .save()
+    .then((listing) => {
+      res.status(201).json(listing);
     })
-  }).catch((error) => {
-    console.error(error)
-  })
-}
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
 
-module.exports = app
+//GET Listing by id
+listingRoutes.route("/:id").get(function (req, res, next) {
+  let id = req.params.id;
+  Listing.findById(id, function (err, listing) {
+    res.json(listing);
+  });
+});
+
+//DELETE Listing by id
+listingRoutes.route("/:id").delete((req, res) => {
+  Listing.findByIdAndDelete(req.params.id)
+    .then(() => res.json("Deleted"))
+    .catch((err) => res.status(404).json(err));
+});
+
+//PUT updates listing
+listingRoutes.route("/:id").put(function (req, res) {
+  Listing.findById(req.params.id, function (err, listing) {
+    if (!listing) res.status(404).send(err);
+    else {
+      listing.Address = req.body.Address;
+      listing.Location = req.body.Location;
+      listing.Price = req.body.Price;
+      listing.MonthlyFee = req.body.MonthlyFee;
+      listing.Type = req.body.Type;
+      listing.Coordinate.Longitude = req.body.Coordinate.Longitude;
+      listing.Coordinate.Latitude = req.body.Coordinate.Latitude;
+
+      listing.save().then((listing) => {
+        res.json(listing);
+      });
+    }
+  });
+});
+
+app.use("/listings", listingRoutes);
+
+//404 Not Found handler, => to Error Handler
+app.use((req, res, next) => {
+  next(createError(404, "Not Found"));
+});
+
+//Error Handler, Gives error 500 or the passed error object into Error Handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.send({
+    error: {
+      status: err.status || 500,
+      message: err.message,
+    },
+  });
+});
+
+app.listen(PORT, function () {
+  console.log("Server is running on Port: " + PORT);
+});
