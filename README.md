@@ -5,6 +5,8 @@ This API has been blatlantly stolen from our biggest competitor hemnet.
 
 Each listing should contain the following information: coordinate with latitude and longitude, Address street name and number, location name (such as municipality (kommun) or city district (stadsdel)), type summary (as in condo (bostadsrätt) or villa), price, monthly fee and wether bidding is active or not.
 
+
+```json
 {
     "Address": "Bollgatan 8",
     "Location": "Velinge",
@@ -17,6 +19,7 @@ Each listing should contain the following information: coordinate with latitude 
         "Latitude": "45.67"
     }
 }
+```
 
 We need to be able to provide a nice list of all properties, as well as showing, creating, updating and deleting individual listings.
 
