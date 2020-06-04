@@ -28,8 +28,6 @@ app.use((req, res, next) => {
   req.models = db.models
   next()
 })
-app.use('/api/members', require('./routes/index'))
-
 
 var options = {
   explorer: true,

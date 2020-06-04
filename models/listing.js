@@ -16,8 +16,7 @@ const listingSchema = new mongoose.Schema({
         Type:{
             type:String
         },
-        Coordinates : {
-
+        Coordinate : {
             Longitude: {
                 type:Number
             },

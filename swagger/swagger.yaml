@@ -1,173 +1,175 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: HomeNet
-  description: |
-    listings of properties for sale
+  title: Listings API
   license:
     name: MIT
 servers:
-- url: http://localhost:3000
+  - url: http://localhost:3000
 paths:
   /listings:
     get:
-      summary: Lists all listings
+      summary: Listings By Type
       operationId: listListings
       tags:
-      - listings
+        - Listings
+      parameters:
+        - name: Type
+          in: query
+          description: filter by Type
+          required: false
+          schema:
+            type: string
+          allowReserved: true
       responses:
-        '200':
-          description: Array of listings
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
         default:
-          description: unexpected error
+          description: error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
-  /:      
     post:
-      summary: Lists all listings
-      operationId: listListings
+      summary: Create a new Listing
+      operationId: createListing
       tags:
-      - listings
+        - Listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
       responses:
-        '201':
-          description: Array of listings
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
-        '401':
-          description: Array of listings
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
         default:
           description: unexpected error
+  /listings/{id}:
+    get:
+      summary: Get By Id
+      operationId: listById
+      tags:
+        - Listings
+      parameters:
+        - name: id
+          in: path
+          description: listing id
+          required: true
+          schema:
+            type: string
+            format: int64
+          allowReserved: true
+      responses:
+        "200":
+          description: List have been found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: list not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
-  /:id:      
+    put:
+      summary: changed by id
+      operationId: putListing
+      tags:
+        - Listings
+      parameters:
+        - name: id
+          in: path
+          description: listing id
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        description: changed
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
+      responses:
+        "200":
+          description: The replaced listing was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        "201":
+          description: The replaced listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        "204":
+          description: Nothing happened
     delete:
-      summary: Lists all listings
-      operationId: listListings
+      summary: Delete a listing by id
+      operationId: delete one Listing
       tags:
-      - listings
+        - Listings
+      parameters:
+        - name: id
+          in: path
+          description: listing Id
+          required: true
+          schema:
+            type: string
+            format: int64
       responses:
-        '200':
-          description: Array of listings
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
-        default:
-          description: unexpected error
+        "200":
+          description: user have been deleted
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-
-  /listings/:id:
-   get:
-      summary: Lists all listings
-      operationId: listListings
-      tags:
-      - listings
-      responses:
-        '200':
-          description: Array of listings
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-    listings/:id:
-      put:
-        summary: Lists all listings
-        operationId: listListings
-        tags:
-        - listings
-        responses:
-          '200':
-            description: Array of listings
-            content:
-              application/json:    
-                schema:
-                  $ref: "#/components/schemas/ResponseListings"
-          default:
-            description: unexpected error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Error"
-                
+                $ref: "#/components/schemas/ResponseListing"
+        "204":
+          description: no user have been deleted
 components:
   schemas:
     Listing:
       type: object
       properties:
         Address:
-          type:String
+          type: string
         Location:
-          type:String
+          type: string
         Price:
-            type:String
+          type: number
         MonthlyFee:
-            type:String
+          type: string
         Type:
-          type:String
-        Coordinates:
+          type: string
+        Coordinate:
+          type: object
+          properties:
             Longitude:
-                type:Number
+              type: number
             Latitude:
-                Type:Number
-# Add properties for your listings here   
+              type: number
     ResponseListing:
       allOf:
-      - $ref: "#/components/schemas/Listing"
-      - properties:
-          __v:
-            type: integer
-            format: uint32
-          _id:
-            type: string
-            format: uuid
+        - $ref: "#/components/schemas/Listing"
+        - properties:
+            id:
+              type: integer
+            _id:
+              type: string
+              format: uuid
     ResponseListings:
       type: array
       items:
         $ref: "#/components/schemas/ResponseListing"
     Error:
       required:
-        - error
+        - code
+        - message
       properties:
-        error:
-          type: object
-          properties:
-            expose:
-              type: boolean
-            statusCode:
-              type: integer
-              format: uint32
-            status:
-              type: integer
-              format: uint32
-            body:
-              title: body as escaped json
-              type: string
-            type:
-              title: fault desciption
-              type: string
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

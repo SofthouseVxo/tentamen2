@@ -1,5 +1,4 @@
 const Listing = require('../models/listing')
-const uuid = require('uuid')
 
 get = (req, res, next) => {
   req.models.Listing.find().then((listings) => {
@@ -10,71 +9,78 @@ get = (req, res, next) => {
 post = (req, res, next) => {
   console.log(req.body)
   const listing = new Listing({
-    Id: uuid.v4(),
     Address: req.body.Address,
     Location: req.body.Location,
     Price: req.body.Price,
     MonthlyFee: req.body.MonthlyFee,
     Type: req.body.Type,
     Coordinate: {
-      Longitude: req.body.Longitude,
-      Latitude: req.body.Latitude
+      Longitude: req.body.Coordinate.Longitude,
+      Latitude: req.body.Coordinate.Latitude,
     }
   })
   try {
-    const newListing = listing.save()
-    res.status(201).send(newListing)
+    const List = listing.save()
+    if(List)
+    return res.status(201).send(List)
+    res.status(400)
   }
   catch (err) {
-
-    res.status(400).json({ message: err.message })
+    next(err)
   }
+
 }
 
-deleted = (async (req, res) => {
-  const message = await Listing
-    .findByIdAndRemove(req.params.id)
-    .then(() => 'deleted');
-
-  res.json({ message });
-})
-
-findById = (async (req, res) => {
-
-  const message = await Listing
-    .findById(req.params.id)
-    .then(() => 'List Found');
-  res.json({ message});
-  
-})
-
-put = (req, res) => {
-  req.models.Listing.updateOne({ _id: req.params.id },
-    {
-      Address: req.body.Address,
-      Location: req.body.Location,
-      Price: req.body.Price,
-      MonthlyFee: req.body.MonthlyFee,
-      Type: req.body.Type,
-      Coordinate: {
-        Longitude: req.body.Longitude,
-        Latitude: req.body.Latitude
-      },
-    }, {
-
-  }).then(() => {
-    req.models.Listing.findById(req.params.id).then((listing) => {
-      res.send(listing)
-    })
+deleted = (req, res, next) => {
+  Listing.findByIdAndDelete(req.params.id).then((deleted)=> {
+    if (deleted)
+      return res.send(deleted).status(200)
+    res.sendStatus(204)
   }).catch((error) => next(error))
 }
+// req.models.User.findById(req.params.id).then((user) => {
+  find = (req, res, next) => {
+    req.models.Listing.findById(req.params.id).then((found) => {
+      return res.send(found);
+    }).catch((error) => next(error))
+  }
 
+  put = (req, res, next) => {
+    req.models.Listing.updateOne({ _id: req.params.id },
+      {
+        Address: req.body.Address,
+        Location: req.body.Location,
+        Price: req.body.Price,
+        MonthlyFee: req.body.MonthlyFee,
+        Type: req.body.Type,
+        Coordinate: {
+          Longitude: req.body.Coordinate.Longitude,
+          Latitude: req.body.Coordinate.Latitude
+        },
+      }, {
+      new: true,
+      upsert: true,
+      runvalidators: true,
+    }).then((status) => {
+      console.log("status: ", status)
+      if (status.upserted) {
+        res.status(201)
+      } else if (status.nModified) {
+        res.status(200)
+      } else {
+        res.status(204)
+      }
+      req.models.Listing.findById(req.params.id).then((listing) => {
+        res.send(listing)
+      })
+    }).catch((error) => next(error))
+  }
 
 module.exports = {
   get,
   post,
   deleted,
-  findById,
+  find,
   put
 }
 
