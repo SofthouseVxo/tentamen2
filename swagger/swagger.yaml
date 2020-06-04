@@ -111,9 +111,7 @@ paths:
         '201':
           description: Created listing
         '204':
-          description: something went wrong
-        '404':
-          description: Id in wrong format
+          description: No Content/Nothing removed
         default:
           description: unexpected error
           content:
@@ -135,6 +133,8 @@ paths:
       responses:
         '200':
           description: Deleted listing
+        '204':
+          desciption: No Content/Nothing changed
           content:
             application/json:
               schema:

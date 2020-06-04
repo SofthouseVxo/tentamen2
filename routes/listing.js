@@ -40,16 +40,17 @@ getById = (req, res, next) => {
 }
 //deletes a specific listing by id
 deleteById = (req, res, next) => {
-  req.models.Listing.findById(req.params.id)
-    .then(property => property.remove())
-    .then(property => res.status(200).send(property))
+  req.models.Listing.findByIdAndDelete(req.params.id)
+    .then((property) => {
+      if (property) {
+        res.status(200).send(property)
+      }
+      res.status(204).send()
+    })
     .catch(err => next(err))
 }
 //updates existing listing by id
 updateById = (req, res, next) => {
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    res.status(404)
-  }
   const { address, location, price, monthlyFee, type, coordinate } = req.body
   req.models.Listing.updateOne({ _id: req.params.id }, {
     address: address,
