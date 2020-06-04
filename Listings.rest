@@ -1,0 +1,35 @@
+GET http://localhost:3000/listings
+###
+
+GET http://localhost:3000/listings/5ed8abafffd346071881d8fe
+###
+//By Author
+GET http://localhost:3000/listings/?Author=Sonja
+###
+
+POST http://localhost:3000/listings
+Content-Type: application/json
+
+{
+    "Address": "Stationsvägen 4",
+    "Location": "Gemla",
+    "Author": "Sonja Berglund",
+    "Price": 59.99,
+    "MonthlyFee": "2000 SEK",
+    "Type": "Villa",
+    "Coordinate": {
+        "Longitude": 14.60,
+        "Latitude": 53.87
+    }
+}
+###
+
+DELETE http://localhost:3000/listings/5ed8aa3fffd346071881d8fd
+###
+
+PATCH http://localhost:3000/listings/5ed8ad66ffd346071881d8ff
+Content-Type: application/json
+
+{
+    "Address": "Stationsvägen 4"
+}

@@ -28,12 +28,147 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+                    post:
+          summary: create a listing item
+          operationId: create listingi item
+          tags:
+          - listings
+          requestBody:
+            description: the book to create
+            required: true
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/Listing"
+          responses:
+            '201':
+              description: OK
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+  /Listing/{ListingId}:
+    get:
+          summary: Info on specific Listing
+          operationId: getListingyId
+          parameters: 
+          - name: listingId
+            in: path
+            description: Listing ID
+            required: true
+            schema:
+              type: string
+              format: int64
+          tags:
+          - listings
+          responses:
+            '200':
+              description: Show one Listing item
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    patch:
+          summary: Updating specific Listing item
+          operationId: Update listing item
+          parameters:
+          - name: ListingID
+            in: path
+            description: Listing ID
+            required: true
+            schema:
+              type: string
+              format: int64
+          tags:
+          - listings
+          requestBody:
+            description: Create an Listing object
+            required: true
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/Listings"
+          responses:
+            '201':
+              description: Update one Listing item
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    delete:
+          summary: Delete specific listitem
+          operationId: delete object
+          parameters:
+          - name: ListingId
+            in: path
+            description: listing ID
+            required: true
+            schema:
+              type: string
+              format: int64 
+          tags:
+          - listings
+          responses:
+            '200':
+              description: Delete one object listing item
+              content:
+                application/json:    
+                  schema:
+                    $ref: "#/components/schemas/ResponseListings"
+                    '204':
+                      description: Cant find id
+                      content:
+                        application/json:    
+                          schema:
+                            $ref: "#/components/schemas/Error"          
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
 components:
   schemas:
     Listing:
       type: object
       properties:
-# Add properties for your listings here   
+          Address:
+            type: string
+          Location:
+            type: string
+          Author:
+            type: string
+          Price:
+            type: integer
+          SellerEmail:
+            type: string
+          MonthlyFee:
+            type: string
+          Type:
+            type: string
+          Coordinate:
+            Longitude:
+              type: integer
+            Latitude:
+              type: integer your listings here   
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"

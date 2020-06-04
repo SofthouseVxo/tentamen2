@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use((error, req, res, next) => {
   if (res.headersSent) {
-    return next(err)
+    return next(error)
   }
   res.status(error.statusCode || error.status || 500).send({error: error })
 })
