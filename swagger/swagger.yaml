@@ -9,6 +9,7 @@ info:
 servers:
 - url: http://localhost:3000
 paths:
+
   /listings:
     get:
       summary: Lists all listings
@@ -28,12 +29,130 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    post:
+      summary: create a listing
+      operationId: createListing
+      tags:
+        - listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseListing'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseListings'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              
+  '/listings/{listingId}':
+    get:
+      summary: Info on specific listing
+      operationId: getListingById
+      parameters:
+        - name: listingId
+          in: path
+          description: ListingID
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - listings
+      responses:
+        '200':
+          description: Show one listing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseListings'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Updating specific listing
+      operationId: updateListing
+      parameters:
+        - name: listingId
+          in: path
+          description: Listing ID
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseListings'
+      responses:
+        '201':
+          description: Update one listing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseListings'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete specific listing
+      operationId: deleteListing
+      parameters:
+        - name: listingId
+          in: path
+          description: Listing ID
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - listings
+      responses:
+        '200':
+          description: Delete one listing
+          content:
+            application/json:
+              schema:
+                '204':
+                  description: Cant find id
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseListings'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     Listing:
       type: object
-      properties:
-# Add properties for your listings here   
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
@@ -69,3 +188,4 @@ components:
             type:
               title: fault desciption
               type: string
+
