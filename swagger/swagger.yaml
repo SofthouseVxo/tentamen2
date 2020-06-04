@@ -43,7 +43,7 @@ paths:
       responses:
         default:
           description: unexpected error
-  /listings/{:id}:
+  /listings/{id}:
     get:
       summary: Get By Id
       operationId: listById
@@ -106,7 +106,6 @@ paths:
                 $ref: "#/components/schemas/ResponseListing"
         "204":
           description: Nothing happened
-  /listings/{id}:
     delete:
       summary: Delete a listing by id
       operationId: delete one Listing
@@ -121,8 +120,14 @@ paths:
             type: string
             format: int64
       responses:
-        default:
-          description: no user with this id
+        "200":
+          description: User Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        "204":
+          description: Nothing happened
 components:
   schemas:
     Listing:
