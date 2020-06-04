@@ -18,13 +18,12 @@ paths:
       - listings
 
       parameters:
-        - name: limit
+        - name: location
           in: query
-          description: How many items to return at one time (max 100)
+          description: filter by location 
           required: false
           schema:
-            type: integer
-            format: int32
+            type: string
 
       responses:
         '200':
