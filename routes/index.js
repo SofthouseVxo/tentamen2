@@ -4,8 +4,10 @@ const router = express.Router()
 const listing = require('./listing.js')
 
 router.get("/listings", listing.get)
+router.get("/listings", listing.getById)
 router.post("/listings", listing.post)
 router.patch("/listings", listing.patch)
 router.delete("/listings", listing.deleteById)
+
 
 module.exports = router

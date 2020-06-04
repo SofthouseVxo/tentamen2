@@ -161,6 +161,25 @@ paths:
     Listing:
       type: object
       properties:
+        Adress: 
+          type: string
+        Location:
+          type: string
+        Author:
+          type: string
+        Price:
+          type: number
+        MonthlyFee: 
+          type: number
+        Type:
+          type: string
+        Coordinate:
+          type: object
+          properties:
+             Longitude: 
+              type: number
+            Latitude:
+              type: number
 # Add properties for your listings here   
     ResponseListing:
       allOf:
