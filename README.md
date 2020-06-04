@@ -15,8 +15,8 @@ Each listing should contain the following information: coordinate with latitude 
     "MonthlyFee": "1999 SEK",
     "Type": "Villa",
     "Coordinate": {
-        "Longitude": "12.34",
-        "Latitude": "45.67"
+        "Longitude": 12.34,
+        "Latitude": 45.67
     }
 }
 ```
