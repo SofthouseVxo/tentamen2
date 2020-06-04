@@ -1,8 +1,17 @@
 get = (req, res, next) => {
-  req.models.Listing.find().then((listings) => {
+  var query;
+if(req.query.address){
+  query = req.models.address.find({address: req.query.address})
+}
+else
+{
+  query = req.models.Listings.find()
+}
+
+  query.exec().then((listings) => {
       return res.send(listings);
     }).catch((error) => next(error))
-}
+  }
 
 post = (req, res, next) => {
   req.models.Listing.create({

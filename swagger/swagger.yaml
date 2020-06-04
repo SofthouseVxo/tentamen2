@@ -11,10 +11,18 @@ servers:
 paths:
   /listings:
     get:
-      summary: Lists all listings
+      summary: Lists all objects
       operationId: listListings
       tags:
       - listings
+      parameters:
+        - name: limit
+          in: query
+          description: How many list object to return at the same time
+          required: false
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
           description: Array of listings
@@ -46,42 +54,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-    getById:
-      summary: Find object in list by id
-      operationId: listListings
-      tags:
-        - listings
-      responses:
-        '200':
-          description: ID of object to return
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
-        default:
-          description: unexpected error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Error"
-    deleteById:
-      summary: Deletes an object from list
-      operationId: listListings
-      tags:
-        - listings
-      responses:
-        '204':
-          description: Object ID to delete
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
-        default:
-          description: unexpected error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Error"
     put:
       summary: Update an existing object in list
       operationId: listListings
@@ -100,6 +72,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+   /listings/{id}:
+      get:
+        summary: Find object in list by id
+        operationId: listListings
+        tags:
+          - listings
+        responses:
+          '200':
+            description: ID of object to return
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/ResponseListings"
+          default:
+            description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+      delete:
+        summary: Deletes an object from list
+        operationId: listListings
+        tags:
+          - listings
+        responses:
+          '204':
+            description: Object ID to delete
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/ResponseListings"
+          default:
+            description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    
 components:
   schemas:
     Listing:
@@ -122,8 +132,12 @@ components:
           type: number
           example: 690
         coordinate:
-          type: number
-          example: 201.83
+          type: object
+            properties:
+              lat:
+                type: number
+              lng:
+                type: number
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
