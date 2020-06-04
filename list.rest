@@ -20,8 +20,8 @@ Content-Type: application/json
       "MonthlyFee": "7000 sek",
       "Type": "Villa",
       "Coordinate": {
-        "Longitude": "12",
-        "Latitude": "45"
+        "Longitude": 12.34,
+        "Latitude": 45.67
       }
     }
 

@@ -23,11 +23,11 @@ const listingSchema = new mongoose.Schema({
     },
     Coordinate: {
         Longitude: {
-            type: String,
+            type: Number,
             required: true
         },
         Latitude: {
-            type: String,
+            type: Number,
             required: true
         }
     }

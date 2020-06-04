@@ -80,7 +80,7 @@ paths:
           content:
             application/json:    
               schema:
-                $ref: "#/components/schemas/ResponseListings"
+                $ref: "#/components/schemas/ResponseListing"
         default:
           description: unexpected error
           content:
@@ -165,21 +165,19 @@ components:
           type: string
         Location:
           type: string
-        Author:
-          type: string
         Price:
-          type: integer
+          type: string
         MonthlyFee:
-          type: integer
+          type: string
         Type: 
           type: string
         Coordinate:
           type: object
           properties:
             Longitude:
-              type: integer
+              type: number
             Latitude:
-              type: integer
+              type: number
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
