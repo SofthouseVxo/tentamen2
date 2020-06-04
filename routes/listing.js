@@ -69,8 +69,8 @@ updateById = (req, res, next) => {
     upsert: true,
   })
     .then((update) => {
-      if (update.upserted) res.status(201).send("new document created")
-      if (update.nModified) res.status(200).send("document updated")
+      if (update.upserted) res.status(201).send(update)
+      if (update.nModified) res.status(200).send(update)
       else res.status(204)
     })
     .catch(err => next(err))

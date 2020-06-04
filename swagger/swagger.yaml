@@ -108,8 +108,16 @@ paths:
       responses:
         '200':
           description: Listing edited
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
         '201':
           description: Created listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
         '204':
           description: No Content/Nothing removed
         default:
@@ -133,11 +141,12 @@ paths:
       responses:
         '200':
           description: Deleted listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
         '204':
           desciption: No Content/Nothing changed
-          content:
-            application/json:
-              schema:
         default:
           description: unexpected error
           content:
