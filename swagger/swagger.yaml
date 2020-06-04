@@ -16,6 +16,16 @@ paths:
       operationId: listListings
       tags:
       - listings
+
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+
       responses:
         '200':
           description: Array of listings
@@ -47,7 +57,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseListings'
+                $ref: '#/components/schemas/ResponseListing'
         default:
           description: unexpected error
           content:
@@ -75,7 +85,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseListings'
+                $ref: '#/components/schemas/ResponseListing'
         default:
           description: unexpected error
           content:
@@ -104,12 +114,23 @@ paths:
             schema:
               $ref: '#/components/schemas/ResponseListings'
       responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseListings'
+
         '201':
           description: Update one listing
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseListings'
+
+        '204':
+          description: Cant find id
+          
         default:
           description: unexpected error
           content:
@@ -135,13 +156,11 @@ paths:
           content:
             application/json:
               schema:
-                '204':
-                  description: Cant find id
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/Error'
                 $ref: '#/components/schemas/ResponseListings'
+
+        '204':
+          description: Cant find id
+                
         default:
           description: unexpected error
           content:

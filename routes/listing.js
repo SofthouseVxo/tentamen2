@@ -1,10 +1,21 @@
 dotify = require ('dotify');
 
 get = (req, res, next) => {
-  req.models.Listing.find().then((listings) => {
-      return res.send(listings);
-    }).catch((error) => next(error))
-}
+  var query;
+  if (req.query.location) {
+    query = req.models.Listing.find({location: req.query.location});
+  } 
+  else 
+  {
+    query = req.models.Listing.find();
+  }
+
+  query.exec().then((listing) => {
+    return res.send(listing);
+  }).catch((error) => {
+    next(error);
+  });
+};
 
 post = (req, res, next) => {
   req.models.Listing.create({
