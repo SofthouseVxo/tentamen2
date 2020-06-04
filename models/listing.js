@@ -1,9 +1,6 @@
 mongoose = require('mongoose');
 
 const listingSchema = new mongoose.Schema({
-    id: {
-        type: Number
-    },
     Address: {
         type: String
     },

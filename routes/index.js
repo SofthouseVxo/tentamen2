@@ -5,9 +5,9 @@ const listing = require('./listing.js')
 
 router.get("/listings", listing.get)
 
-router.post("/", listing.post)
+router.post("/listings", listing.post)
 
-router.delete('/:id', listing.deleteOne)
+router.delete('/listings/:id', listing.deleteOne)
 
 router.get('/listings/:id', listing.findById)
 

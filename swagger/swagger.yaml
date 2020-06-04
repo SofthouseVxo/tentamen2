@@ -28,28 +28,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /{id}:
-    delete:
-      summary: Delete a listing by id
-      operationId: delete one Listing
-      tags:
-        - Listings
-      parameters:
-        - name: id
-          in: path
-          description: listing Id
-          required: true
-          schema:
-            type: string
-            format: int64
-      responses:
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /:
     post:
       summary: Create a new Listing
       operationId: createListing
@@ -65,11 +43,7 @@ paths:
       responses:
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /listings/{id}:
+  /listings/{:id}:
     get:
       summary: Get By Id
       operationId: listById
@@ -132,13 +106,23 @@ paths:
                 $ref: "#/components/schemas/ResponseListing"
         "204":
           description: Nothing happened
+  /listings/{id}:
+    delete:
+      summary: Delete a listing by id
+      operationId: delete one Listing
+      tags:
+        - Listings
+      parameters:
+        - name: id
+          in: path
+          description: listing Id
+          required: true
+          schema:
+            type: string
+            format: int64
+      responses:
         default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
+          description: no user with this id
 components:
   schemas:
     Listing:

@@ -30,25 +30,32 @@ post = (req, res, next) => {
     res.status(201).send(newListing)
   }
   catch (err) {
-
-    res.status(400).json({ message: err.message })
+    next(err)
   }
 }
 
-deleteOne = (async (req, res) => {
-  const message = await Listing
-    .findByIdAndRemove(req.params.id)
-    .then(() => 'List deleted');
-  res.json({ message });
-})
+deleteOne = (req, res, next) => {
+  Listing.findByIdAndRemove(req.params.id).then((deleted) => {
+    if (deleted)
+      return res.send(deleted).status(200)
+    res.sendStatus(204)
+  }).catch((error) => next(error))
+}
 
 
-findById = (async (req, res) => {
-  const message = await Listing
-    .findById(req.params.id)
-    .then(() => 'List Found');
-  res.json({ message });
-})
+// findById = (req, res) => {
+
+//   req.models.Listing.findById(req.params.id)
+//     .then((listings) => {
+//       return res.send(listings);
+//     }).catch((error) 
+// }
+
+findById = (req, res, next) => {
+  req.models.Listing.findById(req.params.id).then((found) => {
+    return res.send(found);
+  }).catch((error) => next(error))
+}
 
 
 put = (req, res, next) => {
@@ -81,6 +88,7 @@ put = (req, res, next) => {
     })
   }).catch((error) => next(error))
 }
+
 
 module.exports = {
   get,
