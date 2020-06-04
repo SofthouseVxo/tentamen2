@@ -28,11 +28,113 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+  /:      
+    post:
+      summary: Lists all listings
+      operationId: listListings
+      tags:
+      - listings
+      responses:
+        '201':
+          description: Array of listings
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        '401':
+          description: Array of listings
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /:id:      
+    delete:
+      summary: Lists all listings
+      operationId: listListings
+      tags:
+      - listings
+      responses:
+        '200':
+          description: Array of listings
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /listings/:id:
+   get:
+      summary: Lists all listings
+      operationId: listListings
+      tags:
+      - listings
+      responses:
+        '200':
+          description: Array of listings
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    listings/:id:
+      put:
+        summary: Lists all listings
+        operationId: listListings
+        tags:
+        - listings
+        responses:
+          '200':
+            description: Array of listings
+            content:
+              application/json:    
+                schema:
+                  $ref: "#/components/schemas/ResponseListings"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+                
 components:
   schemas:
     Listing:
       type: object
       properties:
+        Address:
+          type:String
+        Location:
+          type:String
+        Price:
+            type:String
+        MonthlyFee:
+            type:String
+        Type:
+          type:String
+        Coordinates:
+            Longitude:
+                type:Number
+            Latitude:
+                Type:Number
 # Add properties for your listings here   
     ResponseListing:
       allOf:
