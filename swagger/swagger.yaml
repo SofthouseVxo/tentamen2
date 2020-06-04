@@ -2,8 +2,8 @@ openapi: "3.0.0"
 info:
   version: 1.0.0
   title: HomeNet
-  description: |
-    listings of properties for sale
+  description: 
+    Listings of properties for sale
   license:
     name: MIT
 servers:
@@ -11,17 +11,133 @@ servers:
 paths:
   /listings:
     get:
-      summary: Lists all listings
+      summary: List all listings
       operationId: listListings
       tags:
       - listings
+      parameters:
+      - name: location
+        in: query
+        description: listings by location
+        required: false
+        schema:
+          type: string
       responses:
         '200':
           description: Array of listings
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Post a new property listing
+      operationId: createListing
+      tags:
+      - listings
+      requestBody:
+        description: The property-listing to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '201':
+          description: Created listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /listings/{id}:
+    get:
+      summary: Get specific listing by id
+      operationId: getListing
+      tags:
+      - listings
+      parameters:
+      - name: id
+        in: path
+        description: listingId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: retrieced listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Edit a listing
+      operationId: editListing
+      tags:
+      - listings
+      parameters:
+      - name: id
+        in: path
+        description: listingId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The listing to edit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '200':
+          description: Listing edited
+        '201':
+          description: Created listing
+        '204':
+          description: something went wrong
+        '404':
+          description: Id in wrong format
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Deletes a listing
+      operationId: deleteListing
+      tags:
+      - listings
+      parameters:
+      - name: id
+        in: path
+        description: listingId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Deleted listing
+          content:
+            application/json:
+              schema:
         default:
           description: unexpected error
           content:
@@ -33,7 +149,23 @@ components:
     Listing:
       type: object
       properties:
-# Add properties for your listings here   
+        address:
+          type: string
+        location:
+          type: string
+        type:
+          type: string
+        price:
+          type: number
+        monthlyFee:
+          type: number
+        coordinate:
+          type: object
+          properties:
+            longitude:
+              type: number
+            latitude:
+              type: number
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
