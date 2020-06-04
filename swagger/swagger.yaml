@@ -28,12 +28,102 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    post:
+      summary: Add a new object
+      operationId: listListings
+      tags:
+      - listings
+      responses:
+        '201':
+          description: List object that need to be added to the store
+          # content:
+          #   application/json:    
+          #     schema:
+          #       $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    getById:
+      summary: Find object in list by id
+      operationId: listListings
+      tags:
+        - listings
+      responses:
+        '200':
+          description: ID of object to return
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    deleteById:
+      summary: Deletes an object from list
+      operationId: listListings
+      tags:
+        - listings
+      responses:
+        '204':
+          description: Object ID to delete
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    put:
+      summary: Update an existing object in list
+      operationId: listListings
+      tags:
+      - listings
+      responses:
+        '201':
+          description: Listobject that needs to be added to/in the list
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Listing:
       type: object
       properties:
 # Add properties for your listings here   
+        id:
+          type: integer
+          example: 1
+        address:
+          type: string
+          example: Kungsgatan
+        location:
+          type: string
+          example: Stockholm
+        price:
+          type: number
+          example: 22.50
+        monthlyFee:
+          type: number
+          example: 690
+        coordinate:
+          type: number
+          example: 201.83
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
