@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
 const mongoose = require("mongoose");
 const PORT = 4000;
 const listingRoutes = express.Router();
@@ -110,6 +111,21 @@ listingRoutes.route("/:id").put(function (req, res, next) {
     .catch((error) => next(error));
 });
 
+var options = {
+  explorer: true,
+  editor: true,
+  swaggerOptions: {
+    urls: [
+      {
+        url: "/swagger.yaml",
+        name: "Spec1",
+      },
+    ],
+  },
+};
+
+app.use("/", express.static(__dirname + "/swagger"));
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(null, options));
 app.use("/listings", listingRoutes);
 
 //If path doesnt exist

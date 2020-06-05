@@ -1,0 +1,243 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: HomeNet
+  description: |
+    listings of properties for sale
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:4000
+paths:
+  /listings:
+    get:
+      summary: Lists all listings
+      operationId: listListings
+      tags:
+        - listings
+      responses:
+        "200":
+          description: Array of listings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a Listing
+      operationId: createListing
+      tags:
+        - listings
+      requestBody:
+        description: the listing to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
+            example:
+              Address: Mock Address
+              Location: Mock Location
+              Price: 1
+              MontlyFee: Mock Price
+              Type: Villa
+              Coordinate:
+                Longitude: 1
+                Latitude: 2
+      responses:
+        "201":
+          description: The created listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /listings/{_id}:
+    get:
+      summary: Get a Listing by uuid
+      operationId: getListing
+      tags:
+        - listings
+      parameters:
+        - name: _id
+          in: path
+          description: listing _id
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        "200":
+          description: The found Listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a Listing
+      operationId: deleteListing
+      tags:
+        - listings
+      parameters:
+        - name: _id
+          in: path
+          description: listing _id
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        "200":
+          description: The deleted Listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        "204":
+          description: No change (Nothing was deleted)
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update a Listing
+      operationId: updateListing
+      tags:
+        - listings
+      parameters:
+        - name: _id
+          in: path
+          description: listing _id
+          required: true
+          schema:
+            type: string
+            format: string
+      requestBody:
+        description: the listing to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Listing"
+      responses:
+        "201":
+          description: The created Listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        "200":
+          description: The updated Listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        "204":
+          description: No change (Nothing was deleted)
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /listings/?name={location}:
+    get:
+      summary: Get all Listing from Location
+      operationId: getListingbyLocation
+      tags:
+        - listings
+      parameters:
+        - name: location
+          in: path
+          description: listing location
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        "200":
+          desription: the found locations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListings"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Listing:
+      type: object
+      properties:
+        Address:
+          type: string
+        Location:
+          type: string
+        Price:
+          type: integer
+        MonthlyFee:
+          type: string
+        Type:
+          type: string
+        Coordinate:
+          properties:
+            Longitude:
+              type: integer
+            Latitude:
+              type: integer
+    ResponseListing:
+      allOf:
+        - $ref: "#/components/schemas/Listing"
+        - properties:
+            __v:
+              type: integer
+              format: uint32
+            _id:
+              type: string
+              format: uuid
+    ResponseListings:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResponseListing"
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          properties:
+            expose:
+              type: boolean
+            statusCode:
+              type: integer
+              format: uint32
+            status:
+              type: integer
+              format: uint32
+            body:
+              title: body as escaped json
+              type: string
+            type:
+              title: fault desciption
+              type: string
