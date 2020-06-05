@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: HomeNet
   description: |
-    listings of properties for sale
+    Listings of properties for sale
   license:
     name: MIT
 servers:
@@ -11,10 +11,10 @@ servers:
 paths:
   /listings:
     get:
-      summary: Lists all listings
+      summary: Lists all Listings
       operationId: listListings
       tags:
-        - listings
+        - Listings
       responses:
         "200":
           description: Array of listings
@@ -32,7 +32,7 @@ paths:
       summary: Create a Listing
       operationId: createListing
       tags:
-        - listings
+        - Listings
       requestBody:
         description: the listing to create
         required: true
@@ -67,7 +67,7 @@ paths:
       summary: Get a Listing by uuid
       operationId: getListing
       tags:
-        - listings
+        - Listings
       parameters:
         - name: _id
           in: path
@@ -93,7 +93,7 @@ paths:
       summary: Delete a Listing
       operationId: deleteListing
       tags:
-        - listings
+        - Listings
       parameters:
         - name: _id
           in: path
@@ -121,7 +121,7 @@ paths:
       summary: Update a Listing
       operationId: updateListing
       tags:
-        - listings
+        - Listings
       parameters:
         - name: _id
           in: path
@@ -163,7 +163,7 @@ paths:
       summary: Get all Listing from Location
       operationId: getListingbyLocation
       tags:
-        - listings
+        - Listings
       parameters:
         - name: location
           in: path
@@ -187,7 +187,7 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
-    Listing:
+    Listing: # A single listing
       type: object
       properties:
         Address:
@@ -216,7 +216,7 @@ components:
             _id:
               type: string
               format: uuid
-    ResponseListings:
+    ResponseListings: #list of listings
       type: array
       items:
         $ref: "#/components/schemas/ResponseListing"
