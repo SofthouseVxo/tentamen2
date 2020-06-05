@@ -9,13 +9,28 @@ info:
 servers:
 - url: http://localhost:3000
 paths:
-  /listings/{location}:
-    /listings/{Adress}:
+  /listings{}:
     get:
       summary: Lists all listings
       operationId: listListings
       tags:
       - listings
+      parameters:
+        -name: Location
+        in: query
+        description: filter by listings
+        required: false
+        schema:
+          type: string
+          allowReserved: true
+       parameters:
+        -name: Adress
+        in: query
+        description: filter by listings
+        required: false
+        schema:
+          type: string
+          allowReserved: true
       responses:
         '200':
           description: Array of listings
