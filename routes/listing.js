@@ -19,16 +19,10 @@ post = (req, res, next) => {
       Latitude: req.body.Coordinate.Latitude,
     }
   })
-  try {
     const List = listing.save()
     if(List)
-    return res.status(201).send(List)
-    res.status(400)
-  }
-  catch (err) {
-    next(err)
-  }
-
+    return res.send(List).status(200)
+    res.sendStatus(400)
 }
 
 deleted = (req, res, next) => {

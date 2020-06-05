@@ -12,7 +12,8 @@ paths:
       summary: Listings By Type
       operationId: listListings
       tags:
-        - Listings
+        - listings
+          - Listings
       parameters:
         - name: Type
           in: query
@@ -22,6 +23,8 @@ paths:
             type: string
           allowReserved: true
       responses:
+        '200':
+          description: Array of listings
         default:
           description: error
           content:
@@ -29,20 +32,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     post:
-      summary: Create a new Listing
-      operationId: createListing
+      summary: Listings By Type
+      operationId: listListings
       tags:
-        - Listings
-      requestBody:
-        description: the listing to create
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Listing"
+          - Listings
+      parameters:
+        - name: Type
+          in: query
+          description: filter by Type
+          required: false
+          schema:
+            type: string
+          allowReserved: true
       responses:
+        '200':
+          description: Array of listings
         default:
-          description: unexpected error
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /listings/{id}:
     get:
       summary: Get By Id
