@@ -21,7 +21,7 @@ connection.once("open", function () {
 });
 
 //Get all Listings and find by Location
-listingRoutes.route("/").get(function (req, res) {
+listingRoutes.route("/").get(function (req, res, next) {
   var name = req.query.name;
   if (name) {
     Listing.find({ Location: name }, function (err, listing) {
@@ -30,17 +30,16 @@ listingRoutes.route("/").get(function (req, res) {
   } else {
     Listing.find(function (err, listings) {
       if (err) {
-        console.log(err);
+        next(err);
       } else {
         res.status(200).json(listings);
-        console.log();
       }
     });
   }
 });
 
 //Create new Listing
-listingRoutes.route("/").post(function (req, res) {
+listingRoutes.route("/").post(function (req, res, next) {
   let listing = new Listing(req.body);
   listing
     .save()
@@ -48,7 +47,7 @@ listingRoutes.route("/").post(function (req, res) {
       res.status(201).json(listing);
     })
     .catch((err) => {
-      res.status(400).send(err);
+      next(err);
     });
 });
 
@@ -56,84 +55,76 @@ listingRoutes.route("/").post(function (req, res) {
 listingRoutes.route("/:id").get(function (req, res, next) {
   let id = req.params.id;
   Listing.findById(id, function (err, listing) {
-    res.status(200).json(listing);
+    if (err) {
+      next(err);
+    } else {
+      res.status(200).json(listing);
+    }
   });
 });
 
 //DELETE Listing by id
-listingRoutes.route("/:id").delete((req, res) => {
+listingRoutes.route("/:id").delete((req, res, next) => {
   Listing.findByIdAndDelete(req.params.id)
-    .then(() => res.status(200).send("Deleted"))
-    .catch((err) => res.status(400).json("Error: " + err));
+    .then((deleted) => {
+      if (deleted) return res.send(deleted).status(200);
+      res.sendStatus(204);
+    })
+    .catch((error) => next(error));
 });
 
-listingRoutes.route("/:id").put(function (req, res) {
-  Listing.findById(req.params.id, function (err, listing) {
-    if (!listing) res.status(404).send(err);
-    else {
-      listing.Address = req.body.Address;
-      listing.Location = req.body.Location;
-      listing.Price = req.body.Price;
-      listing.MonthlyFee = req.body.MonthlyFee;
-      listing.Type = req.body.Type;
-      listing.Coordinate.Longitude = req.body.Coordinate.Longitude;
-      listing.Coordinate.Latitude = req.body.Coordinate.Latitude;
-
-      listing
-        .save()
-        .then((listing) => {
-          res.status(200).json(listing);
-        })
-        .catch((err) => {
-          next(err);
-        });
+//PUT creates, updates and no change for listing
+listingRoutes.route("/:id").put(function (req, res, next) {
+  Listing.updateOne(
+    { _id: req.params.id },
+    {
+      Address: req.body.Address,
+      Location: req.body.Location,
+      Price: req.body.Price,
+      MonthlyFee: req.body.MonthlyFee,
+      Type: req.body.Type,
+      Coordinate: {
+        Longitude: req.body.Coordinate.Longitude,
+        Latitude: req.body.Coordinate.Latitude,
+      },
+    },
+    {
+      new: true,
+      upsert: true,
+      runvalidators: true,
     }
-  });
-});
-
-//PUT updates listing
-listingRoutes.route("/:id").put(function (req, res) {
-  Listing.findById(req.params.id, function (err, listing) {
-    if (!listing) res.status(404).send(err);
-    else {
-      listing.Address = req.body.Address;
-      listing.Location = req.body.Location;
-      listing.Price = req.body.Price;
-      listing.MonthlyFee = req.body.MonthlyFee;
-      listing.Type = req.body.Type;
-      listing.Coordinate.Longitude = req.body.Coordinate.Longitude;
-      listing.Coordinate.Latitude = req.body.Coordinate.Latitude;
-
-      listing
-        .save()
-        .then((listing) => {
-          res.status(200).json(listing);
-        })
-        .catch((err) => {
-          next(err);
-        });
-    }
-  });
+  )
+    .then((status) => {
+      console.log("status: ", status);
+      if (status.upserted) {
+        res.status(201);
+      } else if (status.nModified) {
+        res.status(200);
+      } else {
+        res.status(204);
+      }
+      Listing.findById(req.params.id).then((listing) => {
+        res.send(listing);
+      });
+    })
+    .catch((error) => next(error));
 });
 
 app.use("/listings", listingRoutes);
 
 //If path doesnt exist
 app.use((req, res, next) => {
-  const err = new Error("Path Doesn't Exist");
+  const err = new Error();
   err.status = 404;
   next(err);
 });
 
 //Custom Error Handler
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.send({
-    error: {
-      status: err.status || 500,
-      message: err.message,
-    },
-  });
+app.use((error, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(error.statusCode || error.status || 500).send({ error: error });
 });
 
 app.listen(PORT, function () {
