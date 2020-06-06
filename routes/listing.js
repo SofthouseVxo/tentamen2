@@ -1,6 +1,10 @@
 const Listing = require('../models/listing')
 
 get = (req, res, next) => {
+  let findType = {}
+  if (req.query.Type) {
+    findType = { Type: req.query.Type }
+  }
   req.models.Listing.find().then((listings) => {
       return res.send(listings);
     }).catch((error) => next(error))
