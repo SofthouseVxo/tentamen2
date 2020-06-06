@@ -9,12 +9,20 @@ info:
 servers:
   - url: http://localhost:4000
 paths:
-  /listings:
+  /listings/:
     get:
       summary: Lists all Listings
       operationId: listListings
       tags:
         - Listings
+      parameters:
+        - name: name
+          in: query
+          description: filter by location
+          required: false
+          schema:
+            type: string
+            format: string
       responses:
         "200":
           description: Array of listings
@@ -152,33 +160,6 @@ paths:
                 $ref: "#/components/schemas/ResponseListing"
         "204":
           description: No change (Nothing was deleted)
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /listings/?name={location}:
-    get:
-      summary: Get all Listing from Location
-      operationId: getListingbyLocation
-      tags:
-        - Listings
-      parameters:
-        - name: location
-          in: path
-          description: listing location
-          required: true
-          schema:
-            type: string
-            format: string
-      responses:
-        "200":
-          desription: the found locations
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseListings"
         default:
           description: unexpected error
           content:
