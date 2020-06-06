@@ -21,14 +21,14 @@ post = (req, res, next) => {
   })
     const List = listing.save()
     if(List)
-    return res.send(List).status(200)
+    return res.status(200).send(List)
     res.sendStatus(400)
 }
 
 deleted = (req, res, next) => {
   Listing.findByIdAndDelete(req.params.id).then((deleted)=> {
     if (deleted)
-      return res.send(deleted).status(200)
+      return res.status(200).send(deleted)
     res.sendStatus(204)
   }).catch((error) => next(error))
 }

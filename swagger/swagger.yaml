@@ -12,8 +12,7 @@ paths:
       summary: Listings By Type
       operationId: listListings
       tags:
-        - listings
-          - Listings
+        - Listings
       parameters:
         - name: Type
           in: query
@@ -39,14 +38,16 @@ paths:
       parameters:
         - name: Type
           in: query
-          description: filter by Type
+          description: 
           required: false
           schema:
             type: string
           allowReserved: true
       responses:
         '200':
-          description: Array of listings
+          description: created api
+        '400':
+            description: failed
         default:
           description: error
           content:
