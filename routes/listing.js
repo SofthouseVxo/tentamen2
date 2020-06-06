@@ -5,7 +5,7 @@ get = (req, res, next) => {
   if (req.query.Type) {
     findType = { Type: req.query.Type }
   }
-  req.models.Listing.find().then((listings) => {
+  req.models.Listing.find(findType).then((listings) => {
       return res.send(listings);
     }).catch((error) => next(error))
 }
@@ -23,10 +23,13 @@ post = (req, res, next) => {
       Latitude: req.body.Coordinate.Latitude,
     }
   })
-    const List = listing.save()
-    if(List)
-    return res.status(200).send(List)
-    res.sendStatus(400)
+  try {
+    const addedList = listing.save()
+    res.status(201).send(addedList)
+  }
+  catch (err) {
+    next(err)
+  }
 }
 
 deleted = (req, res, next) => {

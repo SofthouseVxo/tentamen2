@@ -22,10 +22,8 @@ paths:
             type: string
           allowReserved: true
       responses:
-        '200':
-          description: Array of listings
         default:
-          description: error
+          description: unexpected error
           content:
             application/json:
               schema:
@@ -38,16 +36,14 @@ paths:
       parameters:
         - name: Type
           in: query
-          description: 
+          description: creating list
           required: false
           schema:
             type: string
           allowReserved: true
       responses:
-        '200':
+        '201':
           description: created api
-        '400':
-            description: failed
         default:
           description: error
           content:
@@ -72,10 +68,6 @@ paths:
       responses:
         "200":
           description: List have been found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseListing"
         default:
           description: list not found
           content:

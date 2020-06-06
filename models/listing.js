@@ -22,7 +22,7 @@ const listingSchema = new mongoose.Schema({
             },
             Latitude: {
                 Type:Number
-            }
+            },
         }
     
 });

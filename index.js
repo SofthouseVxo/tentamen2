@@ -6,7 +6,6 @@ const routes = require("./routes")
 const db = require("./models")
 
 const app = express();
-listing = require("./routes/listing")
 app.use(cors());
 
 // environment variable PORT or 3000 if unset
