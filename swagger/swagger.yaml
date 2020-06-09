@@ -1,39 +1,29 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: HomeNet
-  description: |
-    listings of properties for sale
+  title: Listings API
   license:
     name: MIT
 servers:
 - url: http://localhost:3000
 paths:
-  /listings{}:
+  /listings:
     get:
-      summary: Lists all listings
+      summary: Listings By Location
       operationId: listListings
       tags:
-      - listings
+      - Listings
       parameters:
-        -name: Location
+      - name: Location
         in: query
         description: filter by listings
         required: false
         schema:
           type: string
-          allowReserved: true
-       parameters:
-        -name: Adress
-        in: query
-        description: filter by listings
-        required: false
-        schema:
-          type: string
-          allowReserved: true
+        allowReserved: true
       responses:
         '200':
-          description: Array of listings
+          description: Array of Listings
           content:
             application/json:    
               schema:
@@ -43,166 +33,157 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"components:
-      
+                $ref: "#/components/schemas/Error"
     post:
-       summary: create a property
-       opererationID: createProperty
-       tags:
-       -property
-       requestBody:
-         description: the property to  create
-         required: true
-         content:
-           application/json:
-              schema:
-                $ref: "#/components/schemas/Listing" 
-        responses:
-        '201':
-          description: OK
-          content:
-            application/json:
-              schema: 
-              $ref: "#components/schema/responseListings"     
-        default:
-        description: unexpected error
+      summary: Create a new Listing 
+      operationId: createListing
+      tags:
+      - Listings
+      requestBody:
+        description: the listing  to create
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Error"   
- /listings/{listingId}:
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '200':
+          description: The created listing 
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /listings/{listingId}:
     get:
-          summary: Info on specific property
-          operationId: getPropertyById
-          parameters: 
-          - name: propertyId
-            in: path
-            description: Property ID
-            required: true
+      summary: Get  By Id
+      operationId: listById
+      tags:
+      - Listings
+      parameters:
+      - name: listingId
+        in: path
+        description: listing id
+        required: true
+        schema:
+          type: string
+          format: int64
+        allowReserved: true
+      responses:
+        '200':
+          description: Array of Listings
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Replace an listing by ID
+      operationId: putListing
+      tags:
+      - Listings
+      parameters:
+      - name: listingId
+        in: path
+        description: listing id
+        required: true
+        schema:
+          type: string
+          format: int64
+      requestBody:
+        description: the listing you replaced
+        required: true
+        content:
+          application/json:
             schema:
-              type: string
-              format: int64
-          tags:
-          - properties
-          responses:
-            '200':
-              description: Show one property
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseProperties"
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"  
-      patch:
-          summary: Updating specific property
-          operationId: updateProperty
-          parameters:
-          - name: PropertyId
-            in: path
-            description: property ID
-            required: true
-            schema:
-              type: string
-              format: int64
-          tags:
-          - properties
-          requestBody:
-            description: the property to update
-            required: true
-            content:
-              application/json:    
-                schema:
-                  $ref: "#/components/schemas/listing"
-          responses:
-            '201':
-              description: req.param upserted
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListing"
-            '200':
-              description: OK
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListing" 
-            '204':
-              description: No content
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListing"              
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"
+              $ref: '#/components/schemas/Listing'
+      responses:
+        '200':
+          description: The replaced listing was created
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '201':
+          description: The replaced listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '204':
+          description: Nothing happened
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
-          summary: Delete specific property
-          operationId: deleteProperty
-          parameters:
-          - name: propertyId
-            in: path
-            description: Property ID
-            required: true
-            schema:
-              type: string
-              format: int64 
-          tags:
-          - properties
-          responses:
-            '200':
-              description: deleted
-              content:
-                application/json:    
-                  schema:
-                    $ref: "#/components/schemas/ResponseListing"
-            '204':
-                description: Cant find id
-                  application/json:    
-                    schema:
-                      $ref: "#/components/schemas/Error"                 
-            default:
-              description: unexpected error
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/Error"
+      summary: Delete a listing by ID
+      operationId: deleteListing
+      tags:
+        - Listings
+      parameters:
+      - name: listingId
+        in: path
+        description: listing Id
+        required: true
+        schema:
+          type: string
+          format: int64
+      responses:
+        '201':
+          description: The deleted listing
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
+        '204':
+          description: No change (nothing was deleted)
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
   schemas:
     Listing:
       type: object
       properties:
-        Adress: 
+        Address:
           type: string
         Location:
           type: string
-        Author:
-          type: string
         Price:
           type: number
-        MonthlyFee: 
+        MonthlyFee:
           type: number
-        Type:
+        Type: 
           type: string
         Coordinate:
           type: object
           properties:
-             Longitude: 
+            Longitude:
               type: number
             Latitude:
               type: number
-# Add properties for your listings here  V 
     ResponseListing:
       allOf:
       - $ref: "#/components/schemas/Listing"
       - properties:
-          __v:
+          id:
             type: integer
-            format: uint32
           _id:
             type: string
             format: uuid
@@ -212,22 +193,11 @@ paths:
         $ref: "#/components/schemas/ResponseListing"
     Error:
       required:
-        - error
+        - code
+        - message
       properties:
-        error:
-          type: object
-          properties:
-            expose:
-              type: boolean
-            statusCode:
-              type: integer
-              format: uint32
-            status:
-              type: integer
-              format: uint32
-            body:
-              title: body as escaped json
-              type: string
-            type:
-              title: fault desciption
-              type: string
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
