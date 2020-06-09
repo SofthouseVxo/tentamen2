@@ -44,6 +44,10 @@ paths:
       responses:
         '201':
           description: created api
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseListing"
         default:
           description: error
           content:
@@ -66,8 +70,6 @@ paths:
             format: int64
           allowReserved: true
       responses:
-        "200":
-          description: List have been found
         default:
           description: list not found
           content:
@@ -109,6 +111,12 @@ paths:
                 $ref: "#/components/schemas/ResponseListing"
         "204":
           description: Nothing happened
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Delete a listing by id
       operationId: delete one Listing
@@ -131,6 +139,12 @@ paths:
                 $ref: "#/components/schemas/ResponseListing"
         "204":
           description: no user have been deleted
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Listing:
