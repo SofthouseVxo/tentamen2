@@ -19,7 +19,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "cross-env": "^5.2.0",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "nodemon": "^1.19.1",
     "should": "^13.2.3",
     "sinon": "^7.3.2",
